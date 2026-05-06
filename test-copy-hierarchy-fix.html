@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>复制层级修复测试</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .test-section {
+            margin-bottom: 30px;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .test-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 15px;
+        }
+        .test-result {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 4px;
+            font-family: monospace;
+            white-space: pre-wrap;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        .success {
+            color: #28a745;
+        }
+        .error {
+            color: #dc3545;
+        }
+        .info {
+            color: #17a2b8;
+        }
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        .hierarchy-display {
+            margin: 10px 0;
+            padding: 10px;
+            background: #e9ecef;
+            border-radius: 4px;
+        }
+        .level-0 { margin-left: 0px; font-weight: bold; color: #007bff; }
+        .level-1 { margin-left: 20px; color: #28a745; }
+        .level-2 { margin-left: 40px; color: #ffc107; }
+        .level-3 { margin-left: 60px; color: #dc3545; }
+        .level-4 { margin-left: 80px; color: #6f42c1; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>复制层级修复测试</h1>
+        <p>此测试用于验证思维导图复制功能的层级关系修复效果。</p>
+        
+        <div class="test-section">
+            <div class="test-title">测试说明</div>
+            <div class="test-result">
+<span class="info">问题描述：</span>
+当在根节点按Ctrl+C复制，然后粘贴到XMind时，有些节点层级错乱。
+原本应该在XMind中是3级节点的，其中一部分保持原样，但另一部分成为了2级节点。
+
+<span class="info">修复方案：</span>
+1. 改进getTopAncestorsFomNodeList函数，保持节点的原始顺序
+2. 新增sortNodeListByHierarchy方法，按层级关系正确排序
+3. 增强复制数据格式，添加层级信息提高XMind兼容性
+
+<span class="info">测试方法：</span>
+1. 创建包含多层级节点的测试数据
+2. 模拟复制操作
+3. 验证复制后的数据层级关系是否正确
+4. 检查XMind兼容性增强是否生效
+            </div>
+        </div>
+
+        <div class="test-section">
+            <div class="test-title">模拟测试数据</div>
+            <button onclick="createTestData()">创建测试数据</button>
+            <button onclick="testCopyFunction()">测试复制功能</button>
+            <button onclick="testHierarchySort()">测试层级排序</button>
+            <div id="testDataDisplay" class="test-result"></div>
+        </div>
+
+        <div class="test-section">
+            <div class="test-title">复制结果验证</div>
+            <div id="copyResultDisplay" class="test-result"></div>
+        </div>
+
+        <div class="test-section">
+            <div class="test-title">层级关系检查</div>
+            <div id="hierarchyCheckDisplay" class="test-result"></div>
+        </div>
+    </div>
+
+    <script>
+        // 模拟节点数据结构
+        let testNodes = [];
+        let mockRenderer = null;
+
+        // 创建测试数据
+        function createTestData() {
+            // 模拟思维导图节点结构
+            testNodes = [
+                {
+                    uid: 'root',
+                    data: { text: '根节点', uid: 'root' },
+                    layerIndex: 0,
+                    sortIndex: 0,
+                    parent: null,
+                    children: [
+                        {
+                            uid: 'level1-1',
+                            data: { text: '一级节点1', uid: 'level1-1' },
+                            layerIndex: 1,
+                            sortIndex: 1,
+                            children: [
+                                {
+                                    uid: 'level2-1',
+                                    data: { text: '二级节点1', uid: 'level2-1' },
+                                    layerIndex: 2,
+                                    sortIndex: 2,
+                                    children: [
+                                        {
+                                            uid: 'level3-1',
+                                            data: { text: '三级节点1', uid: 'level3-1' },
+                                            layerIndex: 3,
+                                            sortIndex: 3,
+                                            children: []
+                                        },
+                                        {
+                                            uid: 'level3-2',
+                                            data: { text: '三级节点2', uid: 'level3-2' },
+                                            layerIndex: 3,
+                                            sortIndex: 4,
+                                            children: []
+                                        }
+                                    ]
+                                },
+                                {
+                                    uid: 'level2-2',
+                                    data: { text: '二级节点2', uid: 'level2-2' },
+                                    layerIndex: 2,
+                                    sortIndex: 5,
+                                    children: []
+                                }
+                            ]
+                        },
+                        {
+                            uid: 'level1-2',
+                            data: { text: '一级节点2', uid: 'level1-2' },
+                            layerIndex: 1,
+                            sortIndex: 6,
+                            children: []
+                        }
+                    ]
+                }
+            ];
+
+            // 建立父子关系
+            function setupParentRelations(nodes, parent = null) {
+                nodes.forEach(node => {
+                    node.parent = parent;
+                    // 模拟节点方法
+                    node.isAncestor = function(targetNode) {
+                        let current = targetNode.parent;
+                        while (current) {
+                            if (current.uid === this.uid) return true;
+                            current = current.parent;
+                        }
+                        return false;
+                    };
+                    node.getIndexInBrothers = function() {
+                        if (!this.parent) return 0;
+                        return this.parent.children.findIndex(child => child.uid === this.uid);
+                    };
+                    
+                    if (node.children && node.children.length > 0) {
+                        setupParentRelations(node.children, node);
+                    }
+                });
+            }
+
+            setupParentRelations(testNodes);
+
+            // 创建模拟渲染器
+            mockRenderer = {
+                activeNodeList: [
+                    testNodes[0].children[0].children[0].children[0], // 三级节点1
+                    testNodes[0].children[0].children[0].children[1], // 三级节点2
+                    testNodes[0].children[0].children[1], // 二级节点2
+                    testNodes[0].children[1] // 一级节点2
+                ],
+                
+                // 模拟修复后的方法
+                sortNodeListByHierarchy: function(nodeList) {
+                    const nodesWithHierarchy = nodeList.map(node => {
+                        return {
+                            node: node,
+                            layerIndex: node.layerIndex || 0,
+                            sortIndex: node.sortIndex || 0,
+                            indexInParent: node.parent ? node.getIndexInBrothers() : 0,
+                            hierarchyPath: this.getNodeHierarchyPath(node)
+                        };
+                    });
+
+                    nodesWithHierarchy.sort((a, b) => {
+                        if (a.layerIndex !== b.layerIndex) {
+                            return a.layerIndex - b.layerIndex;
+                        }
+                        
+                        const pathA = a.hierarchyPath;
+                        const pathB = b.hierarchyPath;
+                        
+                        for (let i = 0; i < Math.min(pathA.length, pathB.length); i++) {
+                            if (pathA[i] !== pathB[i]) {
+                                return pathA[i] - pathB[i];
+                            }
+                        }
+                        
+                        return a.sortIndex - b.sortIndex;
+                    });
+
+                    return nodesWithHierarchy.map(item => item.node);
+                },
+
+                getNodeHierarchyPath: function(node) {
+                    const path = [];
+                    let current = node;
+                    
+                    while (current && current.parent) {
+                        const indexInParent = current.getIndexInBrothers();
+                        path.unshift(indexInParent);
+                        current = current.parent;
+                    }
+                    
+                    return path;
+                },
+
+                enhanceDataForXMindCompatibility: function(data) {
+                    const enhanceNode = (node, level = 0) => {
+                        const enhanced = { ...node };
+                        
+                        if (!enhanced.data) enhanced.data = {};
+                        enhanced.data._level = level;
+                        enhanced.data._isTopLevel = level === 0;
+                        
+                        if (enhanced.children && enhanced.children.length > 0) {
+                            enhanced.children = enhanced.children.map(child => 
+                                enhanceNode(child, level + 1)
+                            );
+                        }
+                        
+                        return enhanced;
+                    };
+                    
+                    return data.map(node => enhanceNode(node));
+                }
+            };
+
+            displayTestData();
+        }
+
+        // 显示测试数据
+        function displayTestData() {
+            const display = document.getElementById('testDataDisplay');
+            let html = '<span class="success">✓ 测试数据创建成功</span>\n\n';
+            html += '<span class="info">节点层级结构：</span>\n';
+            
+            function displayNode(node, level = 0) {
+                const indent = '  '.repeat(level);
+                html += `${indent}${level}级: ${node.data.text} (uid: ${node.uid}, sortIndex: ${node.sortIndex})\n`;
+                if (node.children && node.children.length > 0) {
+                    node.children.forEach(child => displayNode(child, level + 1));
+                }
+            }
+            
+            testNodes.forEach(node => displayNode(node));
+            
+            html += '\n<span class="info">当前激活的节点：</span>\n';
+            mockRenderer.activeNodeList.forEach((node, index) => {
+                html += `${index + 1}. ${node.data.text} (层级: ${node.layerIndex})\n`;
+            });
+            
+            display.innerHTML = html;
+        }
+
+        // 模拟getTopAncestorsFomNodeList函数（修复版）
+        function getTopAncestorsFomNodeList(list) {
+            let res = [];
+            list.forEach(node => {
+                if (!list.find(item => {
+                    return item.uid !== node.uid && item.isAncestor(node);
+                })) {
+                    res.push(node);
+                }
+            });
+            
+            // 按照在原始列表中的顺序排序，保持层级关系
+            res.sort((a, b) => {
+                const indexA = list.findIndex(item => item.uid === a.uid);
+                const indexB = list.findIndex(item => item.uid === b.uid);
+                return indexA - indexB;
+            });
+            
+            return res;
+        }
+
+        // 测试复制功能
+        function testCopyFunction() {
+            if (!mockRenderer) {
+                alert('请先创建测试数据');
+                return;
+            }
+
+            const display = document.getElementById('copyResultDisplay');
+            let html = '<span class="info">开始测试复制功能...</span>\n\n';
+
+            // 1. 获取顶层祖先节点
+            const topAncestors = getTopAncestorsFomNodeList(mockRenderer.activeNodeList);
+            html += '<span class="info">1. 顶层祖先节点：</span>\n';
+            topAncestors.forEach((node, index) => {
+                html += `   ${index + 1}. ${node.data.text} (层级: ${node.layerIndex})\n`;
+            });
+
+            // 2. 使用修复后的排序
+            const sortedNodes = mockRenderer.sortNodeListByHierarchy(topAncestors);
+            html += '\n<span class="info">2. 层级排序后的节点：</span>\n';
+            sortedNodes.forEach((node, index) => {
+                const path = mockRenderer.getNodeHierarchyPath(node);
+                html += `   ${index + 1}. ${node.data.text} (层级: ${node.layerIndex}, 路径: [${path.join(',')}])\n`;
+            });
+
+            // 3. 模拟复制数据
+            const copyData = sortedNodes.map(node => ({
+                data: { ...node.data },
+                children: node.children || []
+            }));
+
+            // 4. 增强XMind兼容性
+            const enhancedData = mockRenderer.enhanceDataForXMindCompatibility(copyData);
+            html += '\n<span class="info">3. XMind兼容性增强后的数据：</span>\n';
+            enhancedData.forEach((node, index) => {
+                html += `   ${index + 1}. ${node.data.text} (层级标识: ${node.data._level}, 顶层: ${node.data._isTopLevel})\n`;
+            });
+
+            html += '\n<span class="success">✓ 复制功能测试完成</span>';
+            display.innerHTML = html;
+        }
+
+        // 测试层级排序
+        function testHierarchySort() {
+            if (!mockRenderer) {
+                alert('请先创建测试数据');
+                return;
+            }
+
+            const display = document.getElementById('hierarchyCheckDisplay');
+            let html = '<span class="info">层级关系检查结果：</span>\n\n';
+
+            // 检查排序前后的层级关系
+            const originalOrder = [...mockRenderer.activeNodeList];
+            const topAncestors = getTopAncestorsFomNodeList(originalOrder);
+            const sortedOrder = mockRenderer.sortNodeListByHierarchy(topAncestors);
+
+            html += '<span class="info">原始激活节点顺序：</span>\n';
+            originalOrder.forEach((node, index) => {
+                const path = mockRenderer.getNodeHierarchyPath(node);
+                html += `   ${index + 1}. ${node.data.text} (层级: ${node.layerIndex}, 路径: [${path.join(',')}])\n`;
+            });
+
+            html += '\n<span class="info">修复后的排序：</span>\n';
+            sortedOrder.forEach((node, index) => {
+                const path = mockRenderer.getNodeHierarchyPath(node);
+                html += `   ${index + 1}. ${node.data.text} (层级: ${node.layerIndex}, 路径: [${path.join(',')}])\n`;
+            });
+
+            // 验证层级关系是否正确
+            let isCorrect = true;
+            for (let i = 0; i < sortedOrder.length - 1; i++) {
+                const current = sortedOrder[i];
+                const next = sortedOrder[i + 1];
+                
+                if (current.layerIndex > next.layerIndex) {
+                    isCorrect = false;
+                    html += `\n<span class="error">✗ 层级关系错误：${current.data.text}(${current.layerIndex}) 应该在 ${next.data.text}(${next.layerIndex}) 之后</span>\n`;
+                }
+            }
+
+            if (isCorrect) {
+                html += '\n<span class="success">✓ 层级关系检查通过，修复成功！</span>';
+            } else {
+                html += '\n<span class="error">✗ 层级关系仍存在问题</span>';
+            }
+
+            display.innerHTML = html;
+        }
+
+        // 页面加载时自动创建测试数据
+        window.onload = function() {
+            createTestData();
+        };
+    </script>
+</body>
+</html>

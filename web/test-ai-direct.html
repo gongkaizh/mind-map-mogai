@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI服务直接测试</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .result {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 5px;
+            white-space: pre-wrap;
+            background-color: #f8f9fa;
+            border: 1px solid #dee2e6;
+        }
+        .success {
+            background-color: #d4edda;
+            border-color: #c3e6cb;
+            color: #155724;
+        }
+        .error {
+            background-color: #f8d7da;
+            border-color: #f5c6cb;
+            color: #721c24;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🤖 AI服务直接测试</h1>
+        
+        <button onclick="testConnection()">🔗 测试连接</button>
+        <button onclick="testAiChat()">💬 测试AI对话</button>
+        <button onclick="clearResult()">🗑️ 清除结果</button>
+        
+        <div id="result"></div>
+    </div>
+
+    <script>
+        async function testConnection() {
+            showResult('正在测试连接...', '');
+            
+            try {
+                const response = await fetch('http://localhost:3456/api/ai/test', {
+                    method: 'GET'
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    showResult(`✅ 连接成功！\n\n响应数据:\n${JSON.stringify(data, null, 2)}`, 'success');
+                } else {
+                    const errorText = await response.text();
+                    showResult(`❌ 连接失败 (${response.status})\n\n错误信息:\n${errorText}`, 'error');
+                }
+            } catch (error) {
+                showResult(`❌ 连接失败\n\n错误信息:\n${error.message}`, 'error');
+            }
+        }
+        
+        async function testAiChat() {
+            showResult('正在测试AI对话...', '');
+            
+            try {
+                const requestData = {
+                    provider: 'lmstudio',
+                    api: 'http://192.168.8.242:1234/v1/chat/completions',
+                    method: 'POST',
+                    model: 'local-model',
+                    messages: [
+                        {
+                            role: 'user',
+                            content: 'Hello, this is a test message. Please respond briefly.'
+                        }
+                    ]
+                };
+                
+                console.log('发送请求:', requestData);
+                
+                const response = await fetch('http://localhost:3456/api/ai/chat', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(requestData)
+                });
+                
+                console.log('响应状态:', response.status);
+                
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    showResult(`❌ AI对话失败 (${response.status})\n\n错误信息:\n${errorText}`, 'error');
+                    return;
+                }
+                
+                // 处理流式响应
+                const reader = response.body.getReader();
+                let result = '';
+                let fullResponse = '';
+                
+                showResult('📡 正在接收AI响应...', '');
+                
+                while (true) {
+                    const { done, value } = await reader.read();
+                    if (done) break;
+                    
+                    const chunk = new TextDecoder().decode(value);
+                    console.log('收到数据块:', chunk);
+                    fullResponse += chunk;
+                    
+                    const lines = chunk.split('\n');
+                    
+                    for (const line of lines) {
+                        if (line.startsWith('data: ')) {
+                            const data = line.slice(6).trim();
+                            if (data === '[DONE]' || data === '') continue;
+                            
+                            try {
+                                const parsed = JSON.parse(data);
+                                console.log('解析的数据:', parsed);
+                                
+                                if (parsed.choices && parsed.choices[0] && parsed.choices[0].delta && parsed.choices[0].delta.content) {
+                                    result += parsed.choices[0].delta.content;
+                                    showResult(`📡 AI响应中...\n\n当前内容:\n${result}`, '');
+                                }
+                            } catch (e) {
+                                console.warn('解析JSON失败:', e.message, '原始数据:', data);
+                            }
+                        }
+                    }
+                }
+                
+                console.log('完整响应:', fullResponse);
+                
+                if (result) {
+                    showResult(`✅ AI对话成功！\n\nAI响应:\n${result}`, 'success');
+                } else {
+                    showResult(`⚠️ AI对话完成，但没有收到内容\n\n完整响应:\n${fullResponse}`, 'error');
+                }
+                
+            } catch (error) {
+                console.error('AI对话错误:', error);
+                showResult(`❌ AI对话失败\n\n错误信息:\n${error.message}`, 'error');
+            }
+        }
+        
+        function showResult(message, type) {
+            const resultDiv = document.getElementById('result');
+            resultDiv.textContent = message;
+            resultDiv.className = `result ${type}`;
+            resultDiv.style.display = 'block';
+        }
+        
+        function clearResult() {
+            const resultDiv = document.getElementById('result');
+            resultDiv.style.display = 'none';
+        }
+        
+        // 页面加载时的提示
+        window.onload = function() {
+            console.log('AI服务测试页面已加载');
+        };
+    </script>
+</body>
+</html>

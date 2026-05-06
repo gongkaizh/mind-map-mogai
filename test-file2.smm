@@ -1,0 +1,1 @@
+{"root":{"data":{"text":"测试文件2","expand":true,"uid":"root"},"children":[{"data":{"text":"另一个子节点","expand":true,"uid":"node1"},"children":[]},{"data":{"text":"第二个子节点","expand":true,"uid":"node2"},"children":[]}]}}

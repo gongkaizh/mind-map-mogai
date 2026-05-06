@@ -1,0 +1,85 @@
+{
+  "name": "mind-map-desktop",
+  "version": "0.15.0",
+  "description": "思维导图桌面应用 - Mind Map Desktop Application",
+  "main": "electron-main.js",
+  "author": "Mind Map Team",
+  "license": "MIT",
+  "homepage": "./",
+  "scripts": {
+    "electron": "electron .",
+    "electron-dev": "electron . --dev",
+    "build-electron": "electron-builder",
+    "dist": "npm run build-electron",
+    "pack": "electron-builder --dir",
+    "pack-win": "electron-builder --win",
+    "pack-win-portable": "electron-builder --win portable",
+    "pack-all": "electron-builder --win --mac --linux"
+  },
+  "build": {
+    "appId": "com.mindmap.desktop",
+    "productName": "思维导图",
+    "directories": {
+      "output": "electron-dist"
+    },
+    "files": [
+      "dist/**/*",
+      "electron-main.js",
+      "electron-preload.js",
+      "package.json",
+      "web/simple-ai-service.js",
+      "web/scripts/ai.js",
+      "node_modules/**/*"
+    ],
+    "extraResources": [
+      {
+        "from": "web/simple-ai-service.js",
+        "to": "ai-service.js"
+      }
+    ],
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": ["x64"]
+        },
+        {
+          "target": "portable",
+          "arch": ["x64"]
+        }
+      ],
+      "icon": "dist/logo.ico",
+      "requestedExecutionLevel": "asInvoker"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowElevation": true,
+      "allowToChangeInstallationDirectory": true,
+      "installerIcon": "dist/logo.ico",
+      "uninstallerIcon": "dist/logo.ico",
+      "installerHeaderIcon": "dist/logo.ico",
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "思维导图"
+    },
+    "portable": {
+      "artifactName": "思维导图-${version}-portable.exe"
+    },
+    "mac": {
+      "target": "dmg",
+      "icon": "dist/logo.ico"
+    },
+    "linux": {
+      "target": "AppImage",
+      "icon": "dist/logo.ico"
+    }
+  },
+  "devDependencies": {
+    "electron": "^22.3.27",
+    "electron-builder": "^24.6.4"
+  },
+  "dependencies": {
+    "express": "^4.21.2",
+    "axios": "^1.10.0"
+  }
+}

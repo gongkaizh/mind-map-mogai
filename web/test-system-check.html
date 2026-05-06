@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>思维导图体系化检查功能测试</title>
+    <style>
+        body {
+            font-family: 'Microsoft YaHei', Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f7fa;
+            line-height: 1.6;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+        .section {
+            margin-bottom: 30px;
+            padding: 20px;
+            border: 1px solid #e1e8ed;
+            border-radius: 8px;
+            background: #fafbfc;
+        }
+        .section h3 {
+            margin-top: 0;
+            color: #2c3e50;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+        }
+        .test-case {
+            margin-bottom: 20px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            background: white;
+        }
+        .test-case h4 {
+            margin-top: 0;
+            color: #e74c3c;
+        }
+        .test-data {
+            background: #f8f9fa;
+            padding: 10px;
+            border-radius: 4px;
+            font-family: 'Consolas', monospace;
+            font-size: 12px;
+            white-space: pre-wrap;
+            margin: 10px 0;
+        }
+        .expected-result {
+            background: #e8f5e8;
+            padding: 10px;
+            border-radius: 4px;
+            margin: 10px 0;
+        }
+        .feature-list {
+            list-style-type: none;
+            padding: 0;
+        }
+        .feature-list li {
+            padding: 8px 0;
+            border-bottom: 1px solid #eee;
+        }
+        .feature-list li:before {
+            content: "✓ ";
+            color: #27ae60;
+            font-weight: bold;
+        }
+        .status {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        .status.implemented {
+            background: #d4edda;
+            color: #155724;
+        }
+        .status.pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+        .instructions {
+            background: #e3f2fd;
+            padding: 15px;
+            border-radius: 6px;
+            border-left: 4px solid #2196f3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>思维导图体系化检查功能测试</h1>
+        
+        <div class="instructions">
+            <h3>测试说明</h3>
+            <p>本页面用于测试思维导图体系化检查功能。该功能已经实现并集成到主应用中。</p>
+            <p><strong>如何测试：</strong></p>
+            <ol>
+                <li>打开主应用：<a href="http://localhost:8080" target="_blank">http://localhost:8080</a></li>
+                <li>创建或导入一个思维导图</li>
+                <li>在工具栏中找到"体系化检查"按钮（图标为检测图标）</li>
+                <li>点击按钮查看分析结果</li>
+            </ol>
+        </div>
+
+        <div class="section">
+            <h3>功能特性 <span class="status implemented">已实现</span></h3>
+            <ul class="feature-list">
+                <li>多维度评分系统（结构完整性、逻辑连贯性、层级合理性、内容丰富度、结构平衡性）</li>
+                <li>100分制评分，自动计算总分和各项详细评分</li>
+                <li>问题识别和分类（错误、警告、提示三个级别）</li>
+                <li>具体问题路径定位</li>
+                <li>智能改进建议生成</li>
+                <li>美观的对话框界面展示结果</li>
+                <li>工具栏集成，一键触发检查</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h3>检查维度说明</h3>
+            
+            <div class="test-case">
+                <h4>1. 结构完整性检查</h4>
+                <p>检查思维导图的基本结构是否完整：</p>
+                <ul>
+                    <li>空节点检测：发现内容为空的节点</li>
+                    <li>单子节点检测：发现只有一个子节点的父节点</li>
+                </ul>
+                <div class="expected-result">
+                    <strong>评分影响：</strong>空节点每个扣10分（最多扣30分），单子节点每个扣5分（最多扣20分）
+                </div>
+            </div>
+
+            <div class="test-case">
+                <h4>2. 逻辑连贯性检查</h4>
+                <p>检查同级节点之间的逻辑关联性：</p>
+                <ul>
+                    <li>同级节点相关性分析</li>
+                    <li>内容连贯性评估</li>
+                </ul>
+                <div class="expected-result">
+                    <strong>评分影响：</strong>发现不连贯的同级节点组合时扣分
+                </div>
+            </div>
+
+            <div class="test-case">
+                <h4>3. 层级合理性检查</h4>
+                <p>检查思维导图的层级结构是否合理：</p>
+                <ul>
+                    <li>深度检查：层级过深（超过6层）会被标记</li>
+                    <li>平衡检查：各分支深度差异过大会被标记</li>
+                </ul>
+                <div class="expected-result">
+                    <strong>评分影响：</strong>层级过深扣20分，深度不均扣15分
+                </div>
+            </div>
+
+            <div class="test-case">
+                <h4>4. 内容丰富度检查</h4>
+                <p>检查节点内容的丰富程度：</p>
+                <ul>
+                    <li>短内容节点统计（少于3个字符）</li>
+                    <li>内容质量评估</li>
+                </ul>
+                <div class="expected-result">
+                    <strong>评分影响：</strong>超过70%的节点内容过短时扣25分
+                </div>
+            </div>
+
+            <div class="test-case">
+                <h4>5. 结构平衡性检查</h4>
+                <p>检查各主要分支的平衡程度：</p>
+                <ul>
+                    <li>分支节点数量分析</li>
+                    <li>结构对称性评估</li>
+                </ul>
+                <div class="expected-result">
+                    <strong>评分影响：</strong>分支间节点数量差异过大时扣15分
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h3>评分等级说明</h3>
+            <ul>
+                <li><strong>90-100分：</strong>优秀 - 思维导图结构完整，逻辑清晰</li>
+                <li><strong>80-89分：</strong>良好 - 整体结构较好，有少量改进空间</li>
+                <li><strong>70-79分：</strong>一般 - 基本结构合理，需要一些优化</li>
+                <li><strong>60-69分：</strong>较差 - 存在明显问题，需要重点改进</li>
+                <li><strong>60分以下：</strong>很差 - 结构存在严重问题，建议重新组织</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h3>测试建议</h3>
+            <p>为了充分测试功能，建议创建以下类型的思维导图：</p>
+            <ol>
+                <li><strong>完美结构：</strong>层级合理、内容丰富、逻辑清晰的思维导图</li>
+                <li><strong>有空节点：</strong>包含一些空白节点的思维导图</li>
+                <li><strong>层级过深：</strong>超过6层深度的思维导图</li>
+                <li><strong>内容简短：</strong>大部分节点内容很短的思维导图</li>
+                <li><strong>结构不平衡：</strong>各分支节点数量差异很大的思维导图</li>
+            </ol>
+        </div>
+
+        <div class="section">
+            <h3>技术实现状态</h3>
+            <ul class="feature-list">
+                <li>AiCreate.vue 组件已完成体系化检查功能实现</li>
+                <li>工具栏已添加体系化检查按钮</li>
+                <li>中文翻译文本已完整添加</li>
+                <li>CSS样式已完成，支持美观的结果展示</li>
+                <li>事件系统已集成，支持一键触发检查</li>
+                <li>多维度分析算法已实现</li>
+                <li>问题识别和建议生成系统已完成</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h3>下一步</h3>
+            <p>功能已基本完成，建议进行以下测试和优化：</p>
+            <ol>
+                <li>在实际思维导图中测试各种场景</li>
+                <li>根据用户反馈调整评分算法</li>
+                <li>优化建议内容的准确性</li>
+                <li>考虑添加更多检查维度</li>
+            </ol>
+        </div>
+    </div>
+</body>
+</html>

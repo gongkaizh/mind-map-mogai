@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI提示词优化测试</title>
+    <style>
+        body {
+            font-family: 'Microsoft YaHei', Arial, sans-serif;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f7fa;
+            line-height: 1.6;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+        .section {
+            margin-bottom: 30px;
+            padding: 20px;
+            border: 1px solid #e1e8ed;
+            border-radius: 8px;
+            background: #fafbfc;
+        }
+        .section h3 {
+            margin-top: 0;
+            color: #2c3e50;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+        }
+        .comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-top: 20px;
+        }
+        .before, .after {
+            padding: 15px;
+            border-radius: 6px;
+            font-family: 'Consolas', monospace;
+            font-size: 13px;
+            white-space: pre-wrap;
+            line-height: 1.4;
+        }
+        .before {
+            background: #fff5f5;
+            border: 1px solid #fed7d7;
+        }
+        .after {
+            background: #f0fff4;
+            border: 1px solid #c6f6d5;
+        }
+        .highlight {
+            background: #fff3cd;
+            padding: 2px 4px;
+            border-radius: 3px;
+            font-weight: bold;
+        }
+        .improvement-list {
+            background: #e8f4fd;
+            padding: 15px;
+            border-radius: 6px;
+            border-left: 4px solid #3498db;
+        }
+        .improvement-list ul {
+            margin: 0;
+            padding-left: 20px;
+        }
+        .improvement-list li {
+            margin-bottom: 8px;
+        }
+        .test-scenario {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 6px;
+            margin: 10px 0;
+            border-left: 4px solid #28a745;
+        }
+        .test-scenario h4 {
+            margin-top: 0;
+            color: #155724;
+        }
+        .path-example {
+            font-family: 'Consolas', monospace;
+            background: #f1f3f4;
+            padding: 8px 12px;
+            border-radius: 4px;
+            display: inline-block;
+            margin: 5px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🤖 AI提示词优化对比</h1>
+        
+        <div class="section">
+            <h3>📋 优化概述</h3>
+            <div class="improvement-list">
+                <h4>主要改进点：</h4>
+                <ul>
+                    <li><span class="highlight">路径连贯性强化</span>：明确要求与整体路径保持连贯性及逐层细化深入</li>
+                    <li><span class="highlight">结构化分析</span>：将提示词分为"结构分析"和"核心要求"两大部分</li>
+                    <li><span class="highlight">四维度要求</span>：路径连贯性、父子关联性、同级协调性、内容规范</li>
+                    <li><span class="highlight">逻辑链条完整</span>：强调从根节点到当前节点的逻辑链条要完整</li>
+                    <li><span class="highlight">专业化表述</span>：使用更专业、更精确的AI指令语言</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="section">
+            <h3>🔄 提示词对比</h3>
+            <div class="comparison">
+                <div>
+                    <h4 style="color: #e74c3c;">优化前</h4>
+                    <div class="before">我正在创建一个思维导图，需要你帮我扩展其中的一个分支。具体情况如下：
+
+1. 当前路径：项目管理 -> 风险管理 -> 风险识别
+2. 同级主题：风险评估、风险应对
+
+3. 续写要求：
+   - 这是第3层节点的展开
+   - 需要与父主题"风险管理"保持密切关联
+   - 考虑与同级主题的关联性和互补性
+   - 展开的内容要简洁、重点突出
+   - 每个分支的层级不要超过2层
+   - 每个节点的描述要简短，通常不超过10个字
+
+请帮我继续展开主题"风险识别"的下级内容，要求内容准确、逻辑清晰、结构合理。</div>
+                </div>
+                <div>
+                    <h4 style="color: #27ae60;">优化后</h4>
+                    <div class="after">我正在创建一个思维导图，需要你帮我扩展其中的一个分支。请仔细分析整体结构和上下文关系：
+
+【思维导图结构分析】
+1. 完整路径：项目管理 → 风险管理 → 风险识别
+2. 当前层级：第3层
+3. 同级主题：风险评估、风险应对
+
+【核心要求】
+1. 路径连贯性：
+   - 必须与所属的整体路径保持连贯性及逐层细化深入
+   - 每一层的展开都要承接上一层的逻辑，形成清晰的递进关系
+   - 从根节点"项目管理"到当前节点"风险识别"的逻辑链条要完整
+
+2. 父子关联性：
+   - 生成的子节点必须与直接父主题"风险识别"保持密切关联
+   - 不能偏离父主题的核心含义和范围
+   - 要体现对父主题的具体化、细分化或深入化
+
+3. 同级协调性：
+   - 考虑与同级主题"风险评估、风险应对"的关联性和互补性
+   - 避免与同级主题重复或冲突
+   - 保持同级主题间的逻辑平衡
+
+4. 内容规范：
+   - 每个节点描述简洁明确，通常不超过8个字
+   - 展开层级控制在1-2层，避免过度展开
+   - 内容要准确、专业、有实用价值
+   - 结构要清晰，便于理解和记忆
+
+请基于以上要求，为主题"风险识别"生成合适的下级内容，确保与整个思维导图的逻辑体系高度一致。</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h3>🎯 测试场景</h3>
+            
+            <div class="test-scenario">
+                <h4>场景1：深层路径测试</h4>
+                <div class="path-example">企业管理 → 人力资源 → 招聘管理 → 面试流程 → 技术面试</div>
+                <p><strong>测试重点</strong>：验证AI是否能理解5层深度的路径关系，生成的内容是否与"企业管理"的整体目标保持一致。</p>
+            </div>
+
+            <div class="test-scenario">
+                <h4>场景2：复杂同级关系测试</h4>
+                <div class="path-example">产品开发 → 用户体验 → 交互设计</div>
+                <p><strong>同级主题</strong>：视觉设计、信息架构、可用性测试</p>
+                <p><strong>测试重点</strong>：验证AI是否能避免与同级主题重复，保持互补性。</p>
+            </div>
+
+            <div class="test-scenario">
+                <h4>场景3：专业领域测试</h4>
+                <div class="path-example">医疗健康 → 临床诊断 → 影像诊断 → CT检查</div>
+                <p><strong>测试重点</strong>：验证AI在专业领域是否能保持术语准确性和逻辑严谨性。</p>
+            </div>
+        </div>
+
+        <div class="section">
+            <h3>🚀 使用指南</h3>
+            <ol>
+                <li>打开思维导图应用：<a href="http://localhost:8080" target="_blank">http://localhost:8080</a></li>
+                <li>创建一个多层级的思维导图结构</li>
+                <li>选择某个节点，右键选择"AI续写"</li>
+                <li>观察生成的提示词是否包含了优化后的结构</li>
+                <li>测试AI生成的内容是否符合路径连贯性要求</li>
+                <li>验证生成内容与父主题和同级主题的关联性</li>
+            </ol>
+        </div>
+
+        <div class="section">
+            <h3>📊 预期效果</h3>
+            <div class="improvement-list">
+                <h4>优化后的AI应该能够：</h4>
+                <ul>
+                    <li>✅ 更好地理解思维导图的整体结构和层级关系</li>
+                    <li>✅ 生成与完整路径高度一致的内容</li>
+                    <li>✅ 避免偏离主题或产生逻辑断层</li>
+                    <li>✅ 保持同级主题间的平衡和互补</li>
+                    <li>✅ 提供更专业、更有价值的扩展内容</li>
+                    <li>✅ 形成清晰的逐层递进关系</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>测试主题遍历功能</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .test-section {
+            margin-bottom: 30px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .test-section h3 {
+            margin-top: 0;
+            color: #333;
+        }
+        .instruction {
+            background-color: #e8f4fd;
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
+        .shortcut {
+            background-color: #f0f0f0;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: monospace;
+            font-weight: bold;
+        }
+        .status {
+            margin-top: 10px;
+            padding: 8px;
+            border-radius: 4px;
+        }
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>SimpleMindMap 主题遍历功能测试</h1>
+        
+        <div class="test-section">
+            <h3>🎯 测试目标</h3>
+            <p>验证主题遍历功能是否正常工作，包括：</p>
+            <ul>
+                <li>F3 快捷键启动遍历</li>
+                <li>右键菜单启动遍历</li>
+                <li>全屏遍历体验</li>
+                <li>多种交互方式（键盘、鼠标、滚轮）</li>
+                <li>遍历模式切换</li>
+                <li>节点导航功能</li>
+            </ul>
+        </div>
+
+        <div class="test-section">
+            <h3>🌟 遍历体验特色</h3>
+            <p>新的主题遍历功能提供类似演示模式的沉浸式体验：</p>
+            <ul>
+                <li><strong>自动全屏：</strong>启动遍历时自动进入全屏模式</li>
+                <li><strong>节点聚焦：</strong>当前节点高亮显示并放大，其他节点半透明</li>
+                <li><strong>信息面板：</strong>右上角显示遍历模式和进度</li>
+                <li><strong>操作提示：</strong>底部显示所有可用的操作方式</li>
+                <li><strong>多种交互：</strong>支持键盘快捷键、鼠标点击、滚轮操作</li>
+                <li><strong>流畅切换：</strong>节点间切换有平滑的过渡动画</li>
+            </ul>
+        </div>
+
+        <div class="test-section">
+            <h3>📋 测试步骤</h3>
+            <div class="instruction">
+                <strong>步骤 1：</strong> 打开 <a href="http://localhost:8081" target="_blank">SimpleMindMap 应用</a>
+            </div>
+            <div class="instruction">
+                <strong>步骤 2：</strong> 创建一个包含多个节点的思维导图
+            </div>
+            <div class="instruction">
+                <strong>步骤 3：</strong> 测试快捷键功能：
+                <ul>
+                    <li>按 <span class="shortcut">F3</span> 开始遍历（会自动进入全屏模式）</li>
+                    <li>在遍历模式中：
+                        <ul>
+                            <li>按 <span class="shortcut">F3</span> 或 <strong>鼠标左键点击</strong> 继续下一个节点</li>
+                            <li>按 <span class="shortcut">Shift+F3</span> 或 <strong>鼠标滚轮向上</strong> 返回上一个节点</li>
+                            <li><strong>鼠标滚轮向下</strong> 也可以切换到下一个节点</li>
+                            <li>按 <span class="shortcut">Esc</span> 退出遍历模式</li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+            <div class="instruction">
+                <strong>步骤 4：</strong> 测试右键菜单功能：
+                <ul>
+                    <li>右键点击节点，选择"从此节点开始遍历"</li>
+                    <li>右键点击空白区域，选择"从根节点开始遍历"</li>
+                </ul>
+            </div>
+            <div class="instruction">
+                <strong>步骤 5：</strong> 测试遍历模式切换：
+                <ul>
+                    <li>按 <span class="shortcut">Ctrl+Shift+Down</span> 切换到深度优先遍历</li>
+                    <li>按 <span class="shortcut">Ctrl+Shift+Left</span> 切换到广度优先遍历</li>
+                    <li>按 <span class="shortcut">Ctrl+Shift+Up</span> 切换到同级遍历</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="test-section">
+            <h3>✅ 预期结果</h3>
+            <ul>
+                <li><strong>全屏遍历体验：</strong>F3 快捷键启动后自动进入全屏模式</li>
+                <li><strong>视觉效果：</strong>当前节点高亮显示并放大，其他节点变为半透明</li>
+                <li><strong>信息显示：</strong>右上角显示遍历模式和进度信息</li>
+                <li><strong>控制提示：</strong>底部显示操作提示</li>
+                <li><strong>多种交互：</strong>支持键盘、鼠标点击、滚轮切换节点</li>
+                <li><strong>右键菜单：</strong>显示遍历选项并能正常工作</li>
+                <li><strong>模式切换：</strong>可以通过快捷键在不同遍历模式间切换</li>
+                <li><strong>退出功能：</strong>Esc 键能够退出遍历模式并恢复正常视图</li>
+            </ul>
+        </div>
+
+        <div class="test-section">
+            <h3>🔧 故障排除</h3>
+            <p>如果功能不工作，请检查：</p>
+            <ul>
+                <li>浏览器控制台是否有错误信息</li>
+                <li>TopicTraversal 插件是否正确加载</li>
+                <li>快捷键是否被其他功能占用</li>
+                <li>右键菜单是否显示遍历选项</li>
+            </ul>
+        </div>
+
+        <div class="test-section">
+            <h3>📝 测试记录</h3>
+            <p>请在下方记录测试结果：</p>
+            <div id="test-results">
+                <div class="status" id="f3-test">
+                    <strong>F3 快捷键测试：</strong> <span>待测试</span>
+                </div>
+                <div class="status" id="menu-test">
+                    <strong>右键菜单测试：</strong> <span>待测试</span>
+                </div>
+                <div class="status" id="mode-test">
+                    <strong>模式切换测试：</strong> <span>待测试</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 简单的测试状态管理
+        function updateTestStatus(testId, status, message) {
+            const element = document.getElementById(testId);
+            const span = element.querySelector('span');
+            span.textContent = message;
+            
+            element.className = 'status';
+            if (status === 'success') {
+                element.classList.add('success');
+            } else if (status === 'error') {
+                element.classList.add('error');
+            }
+        }
+
+        // 监听键盘事件来检测快捷键
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'F3') {
+                updateTestStatus('f3-test', 'success', 'F3 键被检测到！');
+            }
+        });
+
+        console.log('主题遍历测试页面已加载');
+        console.log('请按照测试步骤进行功能验证');
+    </script>
+</body>
+</html>

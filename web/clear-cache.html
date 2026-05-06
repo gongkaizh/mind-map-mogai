@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>清除缓存并重置AI配置</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .success {
+            color: #28a745;
+            margin-top: 20px;
+        }
+        .info {
+            background-color: #d1ecf1;
+            border: 1px solid #bee5eb;
+            color: #0c5460;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔧 清除缓存并重置AI配置</h1>
+        
+        <div class="info">
+            <strong>说明：</strong><br>
+            这个工具会清除浏览器中的AI配置缓存，并设置正确的LM Studio配置。
+        </div>
+        
+        <button onclick="clearCacheAndReset()">🗑️ 清除缓存并重置配置</button>
+        <button onclick="showCurrentConfig()">👁️ 查看当前配置</button>
+        
+        <div id="result"></div>
+    </div>
+
+    <script>
+        function clearCacheAndReset() {
+            try {
+                // 清除所有localStorage
+                localStorage.clear();
+                
+                // 设置正确的AI配置
+                const correctAiConfig = {
+                    currentProvider: 'lmstudio',
+                    providers: {
+                        lmstudio: {
+                            api: 'http://192.168.8.242:1234/v1/chat/completions',
+                            model: 'local-model'
+                        },
+                        volcengine: {
+                            api: '',
+                            key: '',
+                            model: ''
+                        }
+                    }
+                };
+                
+                // 保存新的AI配置
+                localStorage.setItem('aiConfig', JSON.stringify(correctAiConfig));
+                
+                showResult('✅ 缓存已清除，AI配置已重置为正确的LM Studio配置！', 'success');
+                
+                // 显示新配置
+                setTimeout(() => {
+                    showCurrentConfig();
+                }, 1000);
+                
+            } catch (error) {
+                showResult('❌ 操作失败: ' + error.message, 'error');
+            }
+        }
+        
+        function showCurrentConfig() {
+            try {
+                const aiConfig = localStorage.getItem('aiConfig');
+                if (aiConfig) {
+                    const config = JSON.parse(aiConfig);
+                    const configText = JSON.stringify(config, null, 2);
+                    showResult('📋 当前AI配置:\n\n' + configText, 'info');
+                } else {
+                    showResult('⚠️ 没有找到AI配置', 'warning');
+                }
+            } catch (error) {
+                showResult('❌ 读取配置失败: ' + error.message, 'error');
+            }
+        }
+        
+        function showResult(message, type) {
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = `<div class="${type}" style="margin-top: 20px; padding: 15px; border-radius: 5px; white-space: pre-wrap;">${message}</div>`;
+        }
+        
+        // 页面加载时显示当前配置
+        window.onload = function() {
+            showCurrentConfig();
+        };
+    </script>
+</body>
+</html>

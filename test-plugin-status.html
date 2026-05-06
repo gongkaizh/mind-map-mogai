@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>插件状态检查</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .status-item {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border-left: 4px solid #007bff;
+            background: #f8f9fa;
+        }
+        .success {
+            border-left-color: #28a745;
+            background: #d4edda;
+        }
+        .error {
+            border-left-color: #dc3545;
+            background: #f8d7da;
+        }
+        .warning {
+            border-left-color: #ffc107;
+            background: #fff3cd;
+        }
+        .test-button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        .test-button:hover {
+            background: #0056b3;
+        }
+        .code {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 4px;
+            padding: 10px;
+            font-family: monospace;
+            font-size: 12px;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>SimpleMindMap 插件状态检查</h1>
+        <p>这个页面用于检查TopicTraversal插件的状态和功能。</p>
+        
+        <div>
+            <button class="test-button" onclick="checkPluginStatus()">检查插件状态</button>
+            <button class="test-button" onclick="testF3Function()">测试F3功能</button>
+            <button class="test-button" onclick="openApp()">打开应用</button>
+        </div>
+        
+        <div id="status-container">
+            <div class="status-item">
+                <strong>等待检查...</strong>
+                <p>点击"检查插件状态"按钮开始检查。</p>
+            </div>
+        </div>
+        
+        <div class="status-item">
+            <h3>使用说明</h3>
+            <ol>
+                <li>确保SimpleMindMap应用正在 http://localhost:8081 运行</li>
+                <li>点击"打开应用"按钮</li>
+                <li>在应用中创建一些节点</li>
+                <li>尝试以下操作：
+                    <ul>
+                        <li>按 <strong>F3</strong> 键启动遍历</li>
+                        <li>右键点击节点选择"从此节点开始遍历"</li>
+                        <li>在遍历模式中使用鼠标点击或滚轮切换节点</li>
+                        <li>按 <strong>Esc</strong> 键退出遍历模式</li>
+                    </ul>
+                </li>
+            </ol>
+        </div>
+        
+        <div class="status-item">
+            <h3>预期行为</h3>
+            <ul>
+                <li>按F3后应该自动进入全屏模式</li>
+                <li>当前节点应该高亮显示并放大</li>
+                <li>右上角应该显示遍历信息面板</li>
+                <li>底部应该显示操作提示</li>
+                <li>鼠标点击和滚轮应该能切换节点</li>
+                <li>按Esc应该退出遍历模式</li>
+            </ul>
+        </div>
+        
+        <div class="status-item">
+            <h3>🔧 最新修复</h3>
+            <div class="success">
+                <strong>✅ 已修复API错误</strong>
+                <p>修复了 <code>addActiveNode</code> 方法名错误，现在使用正确的 <code>addNodeToActiveList</code> 方法。</p>
+
+                <strong>✅ 已修复全屏事件绑定错误</strong>
+                <p>修复了 <code>onFullscreenChange</code> 方法绑定时的null错误。</p>
+
+                <strong>✅ 已修复遍历逻辑</strong>
+                <p>现在可以遍历所有节点（包括折叠的），并支持无限循环遍历。</p>
+            </div>
+        </div>
+
+        <div class="status-item">
+            <h3>调试信息</h3>
+            <p>如果功能不工作，请在浏览器开发者工具中查看控制台错误信息。</p>
+            <div class="code">
+                // 在浏览器控制台中运行以下代码来检查插件状态：
+                console.log('MindMap实例:', window.mindMap);
+                console.log('TopicTraversal插件:', window.mindMap?.topicTraversal);
+                console.log('插件方法:', Object.getOwnPropertyNames(window.mindMap?.topicTraversal || {}));
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function checkPluginStatus() {
+            const container = document.getElementById('status-container');
+            container.innerHTML = '';
+            
+            // 检查应用是否运行
+            addStatus('正在检查应用状态...', 'info');
+            
+            fetch('http://localhost:8081')
+                .then(response => {
+                    if (response.ok) {
+                        addStatus('✅ SimpleMindMap应用正在运行', 'success');
+                        addStatus('📝 请在应用中测试以下功能：', 'info');
+                        addStatus('1. 按F3键启动遍历（应该进入全屏模式）', 'info');
+                        addStatus('2. 右键点击节点选择"从此节点开始遍历"', 'info');
+                        addStatus('3. 在遍历模式中使用鼠标点击或滚轮切换节点', 'info');
+                        addStatus('4. 按Esc键退出遍历模式', 'info');
+                    } else {
+                        addStatus('❌ 无法连接到SimpleMindMap应用', 'error');
+                    }
+                })
+                .catch(error => {
+                    addStatus('❌ SimpleMindMap应用未运行或无法访问', 'error');
+                    addStatus('请确保应用正在 http://localhost:8081 运行', 'warning');
+                });
+        }
+        
+        function testF3Function() {
+            addStatus('🔧 F3功能测试说明：', 'info');
+            addStatus('1. 打开SimpleMindMap应用', 'info');
+            addStatus('2. 创建一些思维导图节点', 'info');
+            addStatus('3. 按F3键，应该看到全屏遍历模式', 'info');
+            addStatus('4. 如果没有反应，请检查浏览器控制台是否有错误', 'warning');
+        }
+        
+        function openApp() {
+            addStatus('🚀 正在打开SimpleMindMap应用...', 'info');
+            window.open('http://localhost:8081', '_blank');
+        }
+        
+        function addStatus(message, type = 'info') {
+            const container = document.getElementById('status-container');
+            const statusItem = document.createElement('div');
+            statusItem.className = `status-item ${type}`;
+            statusItem.innerHTML = `<strong>${message}</strong>`;
+            container.appendChild(statusItem);
+        }
+        
+        // 页面加载时自动检查
+        window.onload = function() {
+            setTimeout(checkPluginStatus, 1000);
+        };
+    </script>
+</body>
+</html>

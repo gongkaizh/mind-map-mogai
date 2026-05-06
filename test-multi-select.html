@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>测试文件多选功能</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .test-area { margin: 20px 0; padding: 15px; border: 1px solid #ccc; border-radius: 5px; }
+        .step { margin: 10px 0; padding: 10px; background: #f5f5f5; border-radius: 3px; }
+        .highlight { background: #ffffcc; padding: 2px 4px; }
+        .success { color: #67c23a; font-weight: bold; }
+        .info { color: #409eff; }
+    </style>
+</head>
+<body>
+    <h1>测试文件多选功能</h1>
+    
+    <div class="test-area">
+        <h3>📁 测试文件准备</h3>
+        <p>我已经为您创建了3个测试文件：</p>
+        <ul>
+            <li><strong>test-file1.smm</strong> - 包含"测试文件1"根节点</li>
+            <li><strong>test-file2.smm</strong> - 包含"测试文件2"根节点</li>
+            <li><strong>test-file3.smm</strong> - 包含"测试文件3"根节点</li>
+        </ul>
+        <p class="info">这些文件位于项目根目录：<code>D:\000dev\gits\mind-map-0.15.0\</code></p>
+    </div>
+    
+    <div class="test-area">
+        <h3>🧪 测试步骤</h3>
+        <div class="step">
+            <strong>步骤1：</strong> 打开思维导图应用：<a href="http://localhost:8080" target="_blank">http://localhost:8080</a>
+        </div>
+        <div class="step">
+            <strong>步骤2：</strong> 点击工具栏中的 <span class="highlight">"打开"</span> 按钮（文件图标）
+        </div>
+        <div class="step">
+            <strong>步骤3：</strong> 在弹出的文件选择对话框中：
+            <ul>
+                <li>按住 <strong>Ctrl</strong> 键</li>
+                <li>依次点击选择 <code>test-file1.smm</code>、<code>test-file2.smm</code>、<code>test-file3.smm</code></li>
+                <li>确认选择了多个文件后，点击"打开"</li>
+            </ul>
+        </div>
+        <div class="step">
+            <strong>步骤4：</strong> 应该会弹出一个文件选择对话框，显示：
+            <ul>
+                <li>"您选择了 3 个文件，请选择要打开的文件："</li>
+                <li>3个单选按钮（Radio），分别对应3个文件名，<span class="highlight">现在可以正常点击选择了</span></li>
+                <li>"打开" 和 "取消" 按钮</li>
+            </ul>
+        </div>
+        <div class="step">
+            <strong>步骤5：</strong> <span class="highlight">点击单选按钮选择其中一个文件</span>（比如选择第2个），然后点击"打开"
+        </div>
+        <div class="step">
+            <strong>步骤6：</strong> 验证结果：思维导图应该显示您选择的文件内容
+        </div>
+    </div>
+    
+    <div class="test-area">
+        <h3>✅ 期望结果</h3>
+        <ul>
+            <li class="success">✓ 文件选择对话框支持多选（按住Ctrl键选择多个文件）</li>
+            <li class="success">✓ 选择多个文件后，弹出文件选择对话框让用户选择要打开的文件</li>
+            <li class="success">✓ 选择文件后，正确打开对应的思维导图文件</li>
+            <li class="success">✓ 如果只选择一个文件，直接打开，不显示选择对话框</li>
+        </ul>
+    </div>
+    
+    <div class="test-area">
+        <h3>🔧 修改内容</h3>
+        <p>我对 <code>web/src/pages/Edit/components/Toolbar.vue</code> 进行了以下修改：</p>
+        <ul>
+            <li>将 <code>window.showOpenFilePicker</code> 的 <code>multiple</code> 参数从 <code>false</code> 改为 <code>true</code></li>
+            <li>添加了专门的文件选择对话框组件，当选择多个文件时让用户选择要打开的文件</li>
+            <li>使用 Element UI 的 Dialog 和 Radio 组件创建用户友好的选择界面</li>
+            <li><span class="success">✅ 修复了单选按钮无法选择的问题</span> - 现在使用独立的 Dialog 组件，确保数据绑定正常工作</li>
+        </ul>
+
+        <h4>🐛 问题修复</h4>
+        <p><strong>问题：</strong> 之前的实现中，文件选择对话框的单选按钮无法正常选择</p>
+        <p><strong>原因：</strong> 在 MessageBox 中动态创建的 Vue 组件无法正确绑定响应式数据</p>
+        <p><strong>解决方案：</strong> 改用独立的 el-dialog 组件，确保数据绑定和事件处理正常工作</p>
+    </div>
+    
+    <div class="test-area">
+        <h3>🗑️ 清理测试文件</h3>
+        <p>测试完成后，您可以删除这些测试文件：</p>
+        <ul>
+            <li>test-file1.smm</li>
+            <li>test-file2.smm</li>
+            <li>test-file3.smm</li>
+            <li>test-multi-select.html（本文件）</li>
+        </ul>
+    </div>
+</body>
+</html>

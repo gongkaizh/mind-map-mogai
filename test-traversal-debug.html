@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>主题遍历功能调试</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f5f5f5;
+        }
+        .debug-panel {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        .test-button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        .test-button:hover {
+            background: #0056b3;
+        }
+        .log {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            padding: 10px;
+            margin-top: 10px;
+            max-height: 300px;
+            overflow-y: auto;
+            font-family: monospace;
+            font-size: 12px;
+        }
+        .error {
+            color: #dc3545;
+        }
+        .success {
+            color: #28a745;
+        }
+        .info {
+            color: #17a2b8;
+        }
+    </style>
+</head>
+<body>
+    <div class="debug-panel">
+        <h1>主题遍历功能调试工具</h1>
+        <p>这个页面用于调试和测试主题遍历功能。请确保 SimpleMindMap 应用正在 http://localhost:8081 运行。</p>
+        
+        <div>
+            <button class="test-button" onclick="openApp()">打开 SimpleMindMap 应用</button>
+            <button class="test-button" onclick="testF3Key()">模拟 F3 按键</button>
+            <button class="test-button" onclick="testEscKey()">模拟 Esc 按键</button>
+            <button class="test-button" onclick="checkPluginStatus()">检查插件状态</button>
+            <button class="test-button" onclick="clearLog()">清空日志</button>
+        </div>
+        
+        <div id="log" class="log"></div>
+    </div>
+
+    <div class="debug-panel">
+        <h2>测试说明</h2>
+        <ol>
+            <li>点击"打开 SimpleMindMap 应用"按钮</li>
+            <li>在应用中创建一些节点</li>
+            <li>尝试以下操作：
+                <ul>
+                    <li>按 F3 键启动遍历</li>
+                    <li>右键点击节点选择"从此节点开始遍历"</li>
+                    <li>在遍历模式中使用鼠标点击或滚轮切换节点</li>
+                    <li>按 Esc 键退出遍历模式</li>
+                </ul>
+            </li>
+        </ol>
+        
+        <h3>预期行为</h3>
+        <ul>
+            <li>按 F3 后应该进入全屏遍历模式</li>
+            <li>当前节点应该高亮显示并放大</li>
+            <li>右上角应该显示遍历信息</li>
+            <li>底部应该显示操作提示</li>
+            <li>鼠标点击和滚轮应该能切换节点</li>
+            <li>按 Esc 应该退出遍历模式</li>
+        </ul>
+    </div>
+
+    <script>
+        function log(message, type = 'info') {
+            const logElement = document.getElementById('log');
+            const timestamp = new Date().toLocaleTimeString();
+            const logEntry = document.createElement('div');
+            logEntry.className = type;
+            logEntry.textContent = `[${timestamp}] ${message}`;
+            logElement.appendChild(logEntry);
+            logElement.scrollTop = logElement.scrollHeight;
+        }
+
+        function openApp() {
+            log('正在打开 SimpleMindMap 应用...', 'info');
+            window.open('http://localhost:8081', '_blank');
+        }
+
+        function testF3Key() {
+            log('模拟 F3 按键测试（请在应用窗口中查看效果）', 'info');
+            // 这里只是记录，实际的F3测试需要在应用窗口中进行
+        }
+
+        function testEscKey() {
+            log('模拟 Esc 按键测试（请在应用窗口中查看效果）', 'info');
+            // 这里只是记录，实际的Esc测试需要在应用窗口中进行
+        }
+
+        function checkPluginStatus() {
+            log('检查插件状态...', 'info');
+            // 这里可以添加更多的状态检查逻辑
+            log('请在浏览器开发者工具中检查是否有错误信息', 'info');
+        }
+
+        function clearLog() {
+            document.getElementById('log').innerHTML = '';
+        }
+
+        // 页面加载时的初始化
+        window.onload = function() {
+            log('主题遍历调试工具已加载', 'success');
+            log('请确保 SimpleMindMap 应用正在运行', 'info');
+        };
+    </script>
+</body>
+</html>
